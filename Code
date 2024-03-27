@@ -1,0 +1,36 @@
+import speech_recognition as sr
+import pyttsx3
+import webbrowser
+def say(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+def takecommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.adjust_for_ambient_noise(source)  # Adjust for ambient noise
+        audio = r.listen(source)
+        try:
+            print("Recognizing...")
+            query = r.recognize_google(audio, language="en-in")
+            print(f"User Said: {query}")
+            return query
+        except Exception as e:
+            print("Sorry, I could not understand. Please try again.")
+            return ""
+
+if __name__ == '__main__':
+    print('Welcome to Friday A.I')
+    say("Hello Sir, I am Friday A.I.")
+    while True:
+        print("Listening...")
+        text = takecommand()
+        if text.lower() == "exit":
+            break
+        if "Open Youtube".lower() in text.lower():                          ''' Open Youtube ---> opening youtube in new window of web browser'''
+            say("Opening Youtube Sir...")
+            webbrowser.open("https://youtube.com")
+
+        #say(text)
