@@ -1,0 +1,84 @@
+import os
+import speech_recognition as sr
+import pyttsx3
+import webbrowser
+import datetime
+
+def say(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+def takecommand():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.adjust_for_ambient_noise(source)  # Adjust for ambient noise
+        audio = r.listen(source)
+        try:
+            print("Recognizing...")
+            query = r.recognize_google(audio, language="en-in")
+            print(f"User Said: {query}")
+            return query.lower()
+        except sr.UnknownValueError:
+            print("Sorry, I could not understand. Please try again.")
+            return ""
+        except sr.RequestError:
+            print("Speech recognition service is unavailable. Please try again later.")
+            return ""
+
+if __name__ == '__main__':
+    print('Welcome to Friday A.I')
+    say("Hello Sir, I am Friday A.I.")
+
+    while True:
+        text = takecommand()
+
+        if text == "exit":
+            break
+
+        sites = {
+            "youtube": "https://www.youtube.com",
+            "wikipedia": "https://www.wikipedia.com",
+            "google": "https://www.google.com",
+            "instagram": "https://www.instagram.com"
+        }
+
+        # Check if the user command matches any of the predefined website openings
+        for site, url in sites.items():
+            if f"open {site}" in text:
+                say(f"Opening {site} sir...")
+                webbrowser.open(url)
+                break
+
+        # Check for the command to open music
+        if "open music" in text:
+            music_path = r"D:\Python\solitude-dark-ambient.mp3"
+            if os.path.exists(music_path):
+                os.startfile(music_path)
+                say("Playing music, sir.")
+            else:
+                say("Music file not found.")
+
+        # Check for the command to report the current time
+        if "the time" in text:
+            current_time = datetime.datetime.now().strftime("%H:%M:%S")
+            say(f"Sir, the time is {current_time}")
+
+        # Check for the command to open "Net Secure" application
+        if "open net secure" in text.lower():
+            netsecure_path = r"C:Desktop\Guardian NetSecure.lnk"
+            if os.path.exists(netsecure_path):
+                os.startfile(netsecure_path)
+                say("Opening Net Secure, sir.")
+            else:
+                say("Net Secure shortcut not found.")
+
+        # Check for the command to open "GTA 5" game
+        if "open vlc" in text.lower():
+            vlc = r"C:Desktop\VLC media player.lnk"
+            if os.path.exists(vlc):
+                os.startfile(vlc)
+                say("Opening vlc media player 5, sir.")
+            else:
+                say("vlc shortcut not found.")
